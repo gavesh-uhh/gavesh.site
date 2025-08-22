@@ -9,6 +9,9 @@
 		radius: number;
 		speed: number;
 		ctx: CanvasRenderingContext2D | null;
+		twinklePhase: number;
+		twinkleSpeed: number;
+		starType: 'normal' | 'bright' | 'dim';
 
 		constructor(canvas: HTMLCanvasElement, x: number, y: number, radius: number, speed: number) {
 			this.x = x;
@@ -16,10 +19,15 @@
 			this.radius = radius;
 			this.speed = speed;
 			this.ctx = canvas.getContext('2d');
+			this.twinklePhase = Math.random() * Math.PI * 2;
+			this.twinkleSpeed = Math.random() * 0.02 + 0.01;
+			this.starType = Math.random() < 0.1 ? 'bright' : Math.random() < 0.3 ? 'dim' : 'normal';
 		}
 
 		update() {
 			this.y += this.speed;
+			this.twinklePhase += this.twinkleSpeed;
+			
 			if (this.y > canvas.height) {
 				this.y = 0;
 				this.x = Math.random() * canvas.width;
@@ -28,10 +36,36 @@
 
 		draw() {
 			if (!this.ctx) return;
+			
+			const twinkle = Math.sin(this.twinklePhase) * 0.3 + 0.7;
+			let alpha = twinkle;
+			let size = this.radius;
+			
+			// Different star types
+			switch (this.starType) {
+				case 'bright':
+					alpha = twinkle * 0.8 + 0.2;
+					size = this.radius * 1.5;
+					break;
+				case 'dim':
+					alpha = twinkle * 0.4 + 0.1;
+					size = this.radius * 0.7;
+					break;
+				default:
+					alpha = twinkle * 0.6 + 0.4;
+			}
+			
 			this.ctx.beginPath();
-			this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-			this.ctx.fillStyle = 'white';
+			this.ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+			this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
 			this.ctx.fill();
+			
+			if (this.starType === 'bright') {
+				this.ctx.beginPath();
+				this.ctx.arc(this.x, this.y, size * 2, 0, Math.PI * 2);
+				this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.1})`;
+				this.ctx.fill();
+			}
 		}
 	}
 
@@ -97,6 +131,63 @@
 		}
 	}
 
+	class ShootingStar {
+		x: number;
+		y: number;
+		speedX: number;
+		speedY: number;
+		trail: { x: number; y: number; alpha: number }[];
+		ctx: CanvasRenderingContext2D | null;
+		life: number;
+		maxLife: number;
+
+		constructor(canvas: HTMLCanvasElement) {
+			this.x = Math.random() * canvas.width;
+			this.y = 0;
+			this.speedX = Math.random() * 3 + 2;
+			this.speedY = Math.random() * 2 + 1;
+			this.trail = [];
+			this.ctx = canvas.getContext('2d');
+			this.life = 0;
+			this.maxLife = Math.random() * 100 + 50;
+		}
+
+		update() {
+			this.x += this.speedX;
+			this.y += this.speedY;
+			this.life++;
+			
+			// Add trail points
+			this.trail.push({ x: this.x, y: this.y, alpha: 1 });
+			if (this.trail.length > 20) this.trail.shift();
+			
+			// Fade trail
+			this.trail.forEach(point => point.alpha *= 0.95);
+		}
+
+		draw() {
+			if (!this.ctx) return;
+			
+			// Draw trail
+			this.trail.forEach((point, index) => {
+				this.ctx!.beginPath();
+				this.ctx!.arc(point.x, point.y, 1, 0, Math.PI * 2);
+				this.ctx!.fillStyle = `rgba(255, 255, 255, ${point.alpha * 0.6})`;
+				this.ctx!.fill();
+			});
+			
+			// Draw shooting star
+			this.ctx.beginPath();
+			this.ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+			this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+			this.ctx.fill();
+		}
+
+		isDead(): boolean {
+			return this.life > this.maxLife || this.x > canvas.width || this.y > canvas.height;
+		}
+	}
+
 	function getChance(chance: number): boolean {
 		return Math.random() < chance;
 	}
@@ -110,7 +201,8 @@
 
 		const starCount = 200;
 		const cometCount = 5;
-		const objects: (Star | Comet)[] = [];
+		const objects: (Star | Comet | ShootingStar)[] = [];
+		let shootingStarTimer = 0;
 
 		for (let i = 0; i < starCount; i++) {
 			const x = Math.random() * canvas.width;
@@ -133,10 +225,24 @@
 		function animate() {
 			if (!ctx) return;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			objects.forEach((obj) => {
+			
+			// Spawn shooting stars occasionally
+			shootingStarTimer++;
+			if (shootingStarTimer > 300 && getChance(0.3)) { // Every ~5 seconds with 30% chance
+				objects.push(new ShootingStar(canvas));
+				shootingStarTimer = 0;
+			}
+			
+			// Update and draw all objects
+			objects.forEach((obj, index) => {
 				obj.update();
 				obj.draw();
+			
+				if (obj instanceof ShootingStar && obj.isDead()) {
+					objects.splice(index, 1);
+				}
 			});
+			
 			requestAnimationFrame(animate);
 		}
 

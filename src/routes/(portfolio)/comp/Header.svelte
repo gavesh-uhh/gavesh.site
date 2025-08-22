@@ -35,7 +35,7 @@
 	async function updateSpotify() {
 		if (paused) return;
 		try {
-			const response = await fetch('/api/lastfm');
+			const response = await fetch('/api/recent');
 			if (!response.ok) {
 				throw new Error('Failed to fetch Spotify data.');
 			}
@@ -79,32 +79,34 @@
 		</div>
 	</div>
 	<div class="flex gap-4 items-center flex-row">
-		<img
-			loading="lazy"
-			title={SPOTIFY_ALBUM}
-			class="size-[50px] rounded-md"
-			src={isOnline ? SPOTIFY_IMAGE : DefaultSong}
-			alt={isOnline ? SPOTIFY_ALBUM : 'Album Cover for Default Picture'}
-		/>
-		<div class=" h-full flex flex-col justify-center">
-			<div>
-				{#if isOnline}
-					<h1 class="font-semibold text-sm sm:text-md flex flex-row gap-1">
-						<div class="text-xs">
-							<span class="text-xs text-muted-foreground">Listening to </span>
-							{SPOTIFY_TRACK}
-						</div>
-						<div>
-							<a href={`https://open.spotify.com/search/${SPOTIFY_TRACK}`}>
-								<SquareArrowOutUpRight class="w-4 h-4" />
-							</a>
-						</div>
-					</h1>
-					<h1 class="text-xs text-muted-foreground">by {SPOTIFY_ARTIST}</h1>
-				{:else}
-					<h1 class="font-semibold text-xs">Not Listening</h1>
-					<h1 class="text-xs text-muted-foreground">to anything</h1>
-				{/if}
+		<div class="flex gap-4 items-center flex-row cursor-pointer hover:opacity-80 transition-opacity" role="button" on:click={() => window.location.href = '/music'}>
+			<img
+				loading="lazy"
+				title={SPOTIFY_ALBUM}
+				class="size-[50px] rounded-md"
+				src={isOnline ? SPOTIFY_IMAGE : DefaultSong}
+				alt={isOnline ? SPOTIFY_ALBUM : 'Album Cover for Default Picture'}
+			/>
+			<div class=" h-full flex flex-col justify-center">
+				<div>
+					{#if isOnline}
+						<h1 class="font-semibold text-sm sm:text-md flex flex-row gap-1">
+							<div class="text-xs">
+								<span class="text-xs text-muted-foreground">Listening to </span>
+								{SPOTIFY_TRACK}
+							</div>
+							<div>
+								<a href={`https://open.spotify.com/search/${SPOTIFY_TRACK}`} class="hover:text-white transition-colors">
+									<SquareArrowOutUpRight class="w-4 h-4" />
+								</a>
+							</div>
+						</h1>
+						<h1 class="text-xs text-muted-foreground">by {SPOTIFY_ARTIST}</h1>
+					{:else}
+						<h1 class="font-semibold text-xs">Not Listening</h1>
+						<h1 class="text-xs text-muted-foreground">to anything</h1>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
