@@ -1,21 +1,5 @@
 <script lang="ts">
 	import { Coffee, SquareArrowOutUpRight } from 'lucide-svelte';
-	import { onMount } from 'svelte';
-
-	type GeminiResponse = {
-		original: string;
-		response: {
-			content: string;
-			emoji: string;
-		};
-	};
-
-	// might use for something later idk
-	const getResponse = async (q: string) => {
-		const response = await fetch('/api/gemini?d=true&q=' + q);
-		const data: GeminiResponse = await response.json();
-		return data;
-	};
 </script>
 
 <div class="flex-1 flex flex-col gap-7">
@@ -39,11 +23,13 @@
 		<h1 class="font-semibold text-muted-foreground">Interests</h1>
 		<p>- Cosmology, Astronomy</p>
 		<p>- Embedded Tech</p>
-		<p>- AI/ML</p>
+		<p>- IoT</p>
 	</div>
 
 	<div>
 		<h1 class="font-semibold text-muted-foreground">Currently Learning</h1>
+		<p>- Agenetic Tooling</p>
+		<p>- RTOS</p>
 		<p>- Rust</p>
 		<p>- Computer Graphics</p>
 	</div>

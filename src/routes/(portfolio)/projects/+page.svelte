@@ -1,79 +1,90 @@
-<div class="flex-1 flex flex-col gap-4">
-	<div class="flex flex-col gap-10">
-		<a href="https://nibm.gavesh.me" target="_blank" rel="noopener noreferrer" class="block hover:bg-white/5 rounded transition">
-			<div>
-				<h1 class="text-lg sm:text-2xl mb-2">NIBM Toolkit</h1>
-				<div class="border-l-2 border-white/25 pl-5 py-2">
-					<p class="text-xs sm:text-base text-muted-foreground max-w-[400px]">
-						Website built for NIBM students to easily view and sort through lecture schedules.
-						Filter, save, favourite, see progress of on going lectures and more!
-					</p>
-					<div class="mt-1">
-						<span class="bg-green-600 px-2 py-1 rounded-3xl text-xs">WIP</span>
-					</div>
-					<div class="flex flex-wrap gap-1 mt-4">
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg`}
-							alt=""
-						/>
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg`}
-							alt=""
-						/>
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg`}
-							alt=""
-						/>
-					</div>
-					<div class="mt-2">
-						<span class="text-xs text-blue-400 underline">Visit nibm.gavesh.me &rarr;</span>
-					</div>
+<script lang="ts">
+	type Project = {
+		name: string;
+		description: string;
+		href: string;
+		linkLabel: string;
+		techIcons: { src: string; alt: string }[];
+		note?: string;
+	};
+
+	const projects: Project[] = [
+		{
+			name: 'NIBM Toolkit',
+			description:
+				'Website built for NIBM students to sort lecture schedules, save favorites, and track ongoing classes.',
+			href: 'https://nibm.gavesh.me',
+			linkLabel: 'Visit nibm.gavesh.me',
+			techIcons: [
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg',
+					alt: 'Svelte'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+					alt: 'TypeScript'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
+					alt: 'Node.js'
+				}
+			]
+		},
+		{
+			name: 'Sequence Diagram Generator',
+			description: 'Generate sequence diagrams from text descriptions using Gemini 2.5.',
+			href: 'https://seq.gavesh.me',
+			linkLabel: 'Visit seq.gavesh.me',
+			note: '~ fork of zenuml-core',
+			techIcons: [
+				{
+					src: 'https://www.pngall.com/wp-content/uploads/16/Google-Gemini-Logo-Transparent.png',
+					alt: 'Gemini'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
+					alt: 'Vue'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
+					alt: 'JavaScript'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
+					alt: 'Node.js'
+				}
+			]
+		}
+	];
+</script>
+
+<div class="flex-1 flex flex-col gap-3">
+	{#each projects as project}
+		<a
+			href={project.href}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="rounded-2xl bg-white/5 px-4 py-4 transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+		>
+			<div class="flex items-center justify-between gap-3">
+				<h1 class="text-lg sm:text-xl font-medium">{project.name}</h1>
+				<span class="rounded-full bg-green-600/90 px-2 py-0.5 text-[10px] font-medium tracking-wide">WIP</span>
+			</div>
+
+			{#if project.note}
+				<p class="mt-1 text-xs italic text-muted-foreground">{project.note}</p>
+			{/if}
+
+			<p class="mt-2 max-w-[560px] text-xs sm:text-sm text-muted-foreground">{project.description}</p>
+
+			<div class="mt-3 flex items-center justify-between gap-3">
+				<div class="flex flex-wrap gap-1.5">
+					{#each project.techIcons as tech}
+						<img class="h-5 w-5" src={tech.src} alt={tech.alt} />
+					{/each}
 				</div>
+				<span class="text-xs text-blue-400">{project.linkLabel} &rarr;</span>
 			</div>
 		</a>
-		<a href="https://seq.gavesh.me" target="_blank" rel="noopener noreferrer" class="block hover:bg-white/5 rounded transition">
-			<div>
-				<h1 class="text-lg sm:text-2xl mb-2">Sequence Diagram Generator</h1>
-				<div class="border-l-2 border-white/25 pl-5 py-2">
-					<p class="text-xs italic text-muted-foreground max-w-[400px]">
-						~ fork of zenuml-core
-					</p>
-					<p class="text-xs sm:text-base text-muted-foreground max-w-[400px]">
-						Generate sequence diagrams from text descriptions using Gemini 2.5
-					</p>
-					<div class="mt-1">
-						<span class="bg-green-600 px-2 py-1 rounded-3xl text-xs">WIP</span>
-					</div>
-					<div class="flex flex-wrap gap-1 mt-4">
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://www.pngall.com/wp-content/uploads/16/Google-Gemini-Logo-Transparent.png`}
-							alt=""
-						/>
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg`}
-							alt=""
-						/>
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg`}
-							alt=""
-						/>
-						<img
-							class="w-[20px] h-[20px]"
-							src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg`}
-							alt=""
-						/>
-					</div>
-					<div class="mt-2">
-						<span class="text-xs text-blue-400 underline">Visit seq.gavesh.me &rarr;</span>
-					</div>
-				</div>
-			</div>
-		</a>
-	</div>
+	{/each}
 </div>

@@ -1,39 +1,25 @@
-
-import { error, json } from "@sveltejs/kit";
-import { LASTFM_API_KEY } from "$env/static/private";
+import { error, isHttpError } from '@sveltejs/kit';
+import { jsonWithCors } from '$lib/server/http';
+import { getTrackInfoByMbid } from '$lib/server/lastfm';
 
 export const GET = async ({ url }) => {
-  try {
-    const mbid = url.searchParams.get("mbid");
-    if (!mbid) {
-      throw error(400, "Missing required parameter: mbid");
-    }
+	try {
+		const mbid = url.searchParams.get('mbid');
+		if (!mbid) {
+			throw error(400, 'Missing required parameter: mbid');
+		}
 
-    const apiUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${LASTFM_API_KEY}&mbid=${mbid}&format=json`;
-    const res = await fetch(apiUrl);
+		const data = await getTrackInfoByMbid(mbid);
+		if (!data.track) {
+			throw error(404, 'Track not found');
+		}
 
-    if (!res.ok) {
-      throw error(res.status, "Failed to fetch track info from Last.fm");
-    }
-
-    const data = await res.json();
-
-    if (!data.track) {
-      throw error(404, "Track not found");
-    }
-
-    return json(
-      data,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
-  } catch (err) {
-    console.error(err);
-    throw error(500, "Internal Server Error");
-  }
+		return jsonWithCors(data);
+	} catch (err) {
+		if (isHttpError(err)) {
+			throw err;
+		}
+		console.error(err);
+		throw error(500, 'Internal Server Error');
+	}
 };

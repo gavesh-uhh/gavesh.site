@@ -13,24 +13,103 @@
 	let SPOTIFY_IMAGE: string;
 	let isOnline: boolean = false;
 	let paused: boolean = false;
+	let profileAsciiCells: string[] = [];
+	let avatarImageLoaded = false;
+	let revealProgress = 0;
+	let profileScrambleFrame: number | undefined;
+	let lastAsciiUpdate = 0;
+	let revealStartTime: number | null = null;
+	const PROFILE_GRID_ROWS = 15;
+	const PROFILE_GRID_COLS = 26;
+	const ASCII_UPDATE_MS = 28;
+	const REVEAL_DURATION_MS = 3500;
+	const ASCII_CHARS = `</>#@20615`;
+	const SOFT_ASCII_CHARS = 'GAVESH';
+	$: overlayOpacity = Math.max(0, 1 - revealProgress);
+	$: imageOpacity = avatarImageLoaded ? Math.min(1, 0.35 + revealProgress) : 0;
 
-	onMount(async () => {
-		await updateProfilePicture();
-		await updateSpotify();
-		setInterval(async () => {
+	onMount(() => {
+		profileAsciiCells = generateAsciiGrid(PROFILE_GRID_ROWS, PROFILE_GRID_COLS, 0);
+		startAsciiLoop();
+
+		void updateProfilePicture();
+		void updateSpotify();
+		const interval = setInterval(async () => {
 			await updateSpotify();
-		}, 1000);
+		}, 10000);
+
+		return () => {
+			clearInterval(interval);
+			if (profileScrambleFrame) {
+				cancelAnimationFrame(profileScrambleFrame);
+			}
+		};
 	});
 
 	async function updateProfilePicture() {
 		try {
 			const response = await fetch('https://api.github.com/users/gavesh-uhh');
 			const data = await response.json();
+			avatarImageLoaded = false;
+			revealProgress = 0;
+			revealStartTime = null;
+			startAsciiLoop();
 			GITHUB_PROFILE_URL = data.avatar_url;
 		} catch (error) {
 			GITHUB_PROFILE_URL = DefaultProfile;
+			avatarImageLoaded = true;
+			revealProgress = 1;
 		}
 	}
+
+	const onProfileImageLoad = () => {
+		avatarImageLoaded = true;
+	};
+
+	const onProfileImageError = () => {
+		GITHUB_PROFILE_URL = DefaultProfile;
+		avatarImageLoaded = true;
+		revealProgress = 1;
+	};
+
+	const pickAscii = () => ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
+	const pickSoftAscii = () => SOFT_ASCII_CHARS[Math.floor(Math.random() * SOFT_ASCII_CHARS.length)];
+
+	const generateAsciiGrid = (rows: number, cols: number, progress: number) => {
+		const cells: string[] = [];
+		for (let index = 0; index < rows * cols; index++) {
+			const denseChance = Math.max(0.15, 1 - progress * 0.9);
+			cells.push(Math.random() < denseChance ? pickAscii() : pickSoftAscii());
+		}
+		return cells;
+	};
+
+	const easeOutCubic = (value: number) => 1 - (1 - value) ** 3;
+
+	const startAsciiLoop = () => {
+		if (profileScrambleFrame) return;
+		const step = (timestamp: number) => {
+			if (timestamp - lastAsciiUpdate >= ASCII_UPDATE_MS) {
+				if (avatarImageLoaded && revealStartTime === null) {
+					revealStartTime = timestamp;
+				}
+				if (revealStartTime !== null) {
+					const elapsed = timestamp - revealStartTime;
+					const linear = Math.min(1, elapsed / REVEAL_DURATION_MS);
+					revealProgress = easeOutCubic(linear);
+				}
+				profileAsciiCells = generateAsciiGrid(PROFILE_GRID_ROWS, PROFILE_GRID_COLS, revealProgress);
+				lastAsciiUpdate = timestamp;
+			}
+
+			if (revealProgress >= 1) {
+				profileScrambleFrame = undefined;
+				return;
+			}
+			profileScrambleFrame = requestAnimationFrame(step);
+		};
+		profileScrambleFrame = requestAnimationFrame(step);
+	};
 
 	async function updateSpotify() {
 		if (paused) return;
@@ -68,8 +147,30 @@
 
 <div class="flex flex-col sm:flex-row gap-12 sm:gap-16">
 	<div class="flex flex-row gap-4 items-end">
-		<div>
-			<img class="max-w-[120px] max-h-[120px] rounded-lg" src={GITHUB_PROFILE_URL} alt="" />
+		<div class="relative w-[120px] h-[120px]">
+			<img
+				class="w-[120px] h-[120px] rounded-lg object-cover transition-opacity duration-500 ease-out"
+				style={`opacity: ${imageOpacity};`}
+				src={GITHUB_PROFILE_URL}
+				alt="Gavesh"
+				on:load={onProfileImageLoad}
+				on:error={onProfileImageError}
+			/>
+			{#if overlayOpacity > 0}
+				<div
+					class="absolute inset-0 rounded-lg bg-transparent text-muted-foreground/40 font-mono text-[8px] leading-none tracking-[-0.01em] overflow-hidden select-none pointer-events-none transition-opacity duration-150"
+					style={`opacity: ${overlayOpacity};`}
+				>
+					<div
+						class="h-full w-full grid place-items-center"
+						style={`grid-template-columns: repeat(${PROFILE_GRID_COLS}, minmax(0, 1fr)); grid-template-rows: repeat(${PROFILE_GRID_ROWS}, minmax(0, 1fr));`}
+					>
+						{#each profileAsciiCells as cell}
+							<span class="block w-full text-center">{cell}</span>
+						{/each}
+					</div>
+				</div>
+			{/if}
 		</div>
 		<div class="cursor-pointer h-full flex flex-col justify-end">
 			<div>
@@ -79,7 +180,18 @@
 		</div>
 	</div>
 	<div class="flex gap-4 items-center flex-row">
-		<div class="flex gap-4 items-center flex-row cursor-pointer hover:opacity-80 transition-opacity" role="button" on:click={() => window.location.href = '/music'}>
+		<div
+			class="flex gap-4 items-center flex-row cursor-pointer hover:opacity-80 transition-opacity"
+			role="button"
+			tabindex="0"
+			on:click={() => (window.location.href = '/music')}
+			on:keydown={(event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					window.location.href = '/music';
+				}
+			}}
+		>
 			<img
 				loading="lazy"
 				title={SPOTIFY_ALBUM}
@@ -96,7 +208,10 @@
 								{SPOTIFY_TRACK}
 							</div>
 							<div>
-								<a href={`https://open.spotify.com/search/${SPOTIFY_TRACK}`} class="hover:text-white transition-colors">
+								<a
+									href={`https://open.spotify.com/search/${SPOTIFY_TRACK}`}
+									class="hover:text-white transition-colors"
+								>
 									<SquareArrowOutUpRight class="w-4 h-4" />
 								</a>
 							</div>

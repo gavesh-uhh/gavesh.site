@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -26,11 +27,6 @@
 }
 
 @font-face {
-  font-family: Inter;
-  src: url("./lib/fonts/Inter.ttf");
-}
-
-@font-face {
   font-family: Hedvig;
   src: url("./lib/fonts/Hedvig.ttf");
 }
@@ -40,7 +36,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   scrollbar-width: thin;
   scrollbar-color: #555 #2c2c2c;
 
