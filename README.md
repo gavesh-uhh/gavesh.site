@@ -1,13 +1,37 @@
-# Portfolio/Personal Website
-```made with Svelte 5```
+# gavesh.live
 
-### Disclaimer
-Contains way too much confidential stuff (not about me)
-probably not a good idea to use this as a template.
-and again probably should move those actions to a different website or something.
+Personal portfolio + live dashboard thing.
+Built with **Svelte 5**.
 
-### Installation
-dont.
+## What this is
 
-### Contribution
-dont.
+- A personal site (`/`, `/projects`, `/skills`, `/music`, `/links`)
+- Last.fm-powered music endpoints
+- Styled to be minimal, dark, and slightly dramatic
+
+## Stack
+
+- SvelteKit 2 + Svelte 5
+- Tailwind CSS
+- Vite
+- Vercel Analytics
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Environment variables
+
+For music API routes, set:
+
+- `LASTFM_API_KEY`
+- `LASTFM_API_USERNAME`
+
+If these are missing, music endpoints will fail loudly (as they should).
+
+## Disclaimer
+
+Not a starter template.
