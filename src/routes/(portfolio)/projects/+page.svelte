@@ -32,7 +32,7 @@
 		},
 		{
 			name: 'Sequence Diagram Generator',
-			description: 'Generate sequence diagrams from text descriptions using Gemini 2.5.',
+			description: 'Generate sequence diagrams from text descriptions using Gemini 3.5 Flash.',
 			href: 'https://seq.gavesh.me',
 			linkLabel: 'Visit seq.gavesh.me',
 			note: '~ fork of zenuml-core',
@@ -68,14 +68,18 @@
 		>
 			<div class="flex items-center justify-between gap-3">
 				<h1 class="text-lg sm:text-xl font-medium">{project.name}</h1>
-				<span class="rounded-full bg-green-600/90 px-2 py-0.5 text-[10px] font-medium tracking-wide">WIP</span>
+				<span class="rounded-full bg-green-600/90 px-2 py-0.5 text-[10px] font-medium tracking-wide"
+					>WIP</span
+				>
 			</div>
 
 			{#if project.note}
 				<p class="mt-1 text-xs italic text-muted-foreground">{project.note}</p>
 			{/if}
 
-			<p class="mt-2 max-w-[560px] text-xs sm:text-sm text-muted-foreground">{project.description}</p>
+			<p class="mt-2 max-w-[560px] text-xs sm:text-sm text-muted-foreground">
+				{project.description}
+			</p>
 
 			<div class="mt-3 flex items-center justify-between gap-3">
 				<div class="flex flex-wrap gap-1.5">

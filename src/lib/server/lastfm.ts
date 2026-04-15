@@ -1,4 +1,4 @@
-import { LASTFM_API_KEY, LASTFM_API_USERNAME } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
 
 const LASTFM_API_BASE = 'https://ws.audioscrobbler.com/2.0/';
@@ -53,10 +53,19 @@ export type ArtistInfoResponse = {
 	artist?: unknown;
 };
 
+const getRequiredEnvVar = (name: 'LASTFM_API_KEY' | 'LASTFM_API_USERNAME') => {
+	const value = env[name];
+	if (!value) {
+		throw error(500, `Missing required environment variable: ${name}`);
+	}
+	return value;
+};
+
 const buildLastFmUrl = (method: string, params: LastFmParams = {}) => {
+	const apiKey = getRequiredEnvVar('LASTFM_API_KEY');
 	const requestUrl = new URL(LASTFM_API_BASE);
 	requestUrl.searchParams.set('method', method);
-	requestUrl.searchParams.set('api_key', LASTFM_API_KEY);
+	requestUrl.searchParams.set('api_key', apiKey);
 	requestUrl.searchParams.set('format', 'json');
 
 	for (const [key, value] of Object.entries(params)) {
@@ -86,12 +95,12 @@ export const normalizeArtistName = (fullStr: string) => fullStr.replace(/\s{2,}/
 
 export const getRecentTracks = () =>
 	fetchLastFm<RecentTracksResponse>('user.getrecenttracks', {
-		user: LASTFM_API_USERNAME
+		user: getRequiredEnvVar('LASTFM_API_USERNAME')
 	});
 
 export const getTopTracks = () =>
 	fetchLastFm<TopTracksResponse>('user.gettoptracks', {
-		user: LASTFM_API_USERNAME,
+		user: getRequiredEnvVar('LASTFM_API_USERNAME'),
 		period: '1month'
 	});
 
