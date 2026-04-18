@@ -20,18 +20,18 @@
 	</div>
 
 	<div>
-		<h1 class="font-semibold text-muted-foreground">Interests</h1>
-		<p>- Cosmology, Astronomy</p>
-		<p>- Embedded Tech</p>
-		<p>- IoT</p>
-	</div>
-
-	<div>
 		<h1 class="font-semibold text-muted-foreground">Currently Learning</h1>
 		<p>- Agenetic Tooling</p>
 		<p>- RTOS</p>
 		<p>- Rust</p>
 		<p>- Computer Graphics</p>
+	</div>
+
+	<div>
+		<h1 class="font-semibold text-muted-foreground">Interests</h1>
+		<p>- Cosmology, Astronomy</p>
+		<p>- Embedded Tech</p>
+		<p>- IoT</p>
 	</div>
 
 	<div>
