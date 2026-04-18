@@ -10,6 +10,27 @@
 
 	const projects: Project[] = [
 		{
+			name: 'smallcode',
+			description:
+				'A claude-code like harness specifically made for low parameter LLMS (eg: Qwen2.5:7B, Gemma4:e2b) for developement tasks',
+			href: 'https://github.com/gavesh-uhh/smallcode',
+			linkLabel: 'Visit Github',
+			techIcons: [
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+					alt: 'TypeScript'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/denojs/denojs-original.svg',
+					alt: 'Deno.js'
+				},
+				{
+					src: 'https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/ollama.png',
+					alt: 'Ollama'
+				}
+			]
+		},
+		{
 			name: 'NIBM Toolkit',
 			description:
 				'Website built for NIBM students to sort lecture schedules, save favorites, and track ongoing classes.',
