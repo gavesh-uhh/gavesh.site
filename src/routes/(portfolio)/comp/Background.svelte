@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { isReduced, initMotionWatcher } from '$lib/state/motion.svelte';
 
 	let canvas: HTMLCanvasElement;
 
@@ -27,21 +28,20 @@
 		update() {
 			this.y += this.speed;
 			this.twinklePhase += this.twinkleSpeed;
-			
+
 			if (this.y > canvas.height) {
 				this.y = 0;
 				this.x = Math.random() * canvas.width;
 			}
 		}
 
-		draw() {
+		draw(staticMode = false) {
 			if (!this.ctx) return;
-			
-			const twinkle = Math.sin(this.twinklePhase) * 0.3 + 0.7;
+
+			const twinkle = staticMode ? 1 : Math.sin(this.twinklePhase) * 0.3 + 0.7;
 			let alpha = twinkle;
 			let size = this.radius;
-			
-			// Different star types
+
 			switch (this.starType) {
 				case 'bright':
 					alpha = twinkle * 0.8 + 0.2;
@@ -54,12 +54,12 @@
 				default:
 					alpha = twinkle * 0.6 + 0.4;
 			}
-			
+
 			this.ctx.beginPath();
 			this.ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
 			this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
 			this.ctx.fill();
-			
+
 			if (this.starType === 'bright') {
 				this.ctx.beginPath();
 				this.ctx.arc(this.x, this.y, size * 2, 0, Math.PI * 2);
@@ -156,27 +156,23 @@
 			this.x += this.speedX;
 			this.y += this.speedY;
 			this.life++;
-			
-			// Add trail points
+
 			this.trail.push({ x: this.x, y: this.y, alpha: 1 });
 			if (this.trail.length > 20) this.trail.shift();
-			
-			// Fade trail
-			this.trail.forEach(point => point.alpha *= 0.95);
+
+			this.trail.forEach((point) => (point.alpha *= 0.95));
 		}
 
 		draw() {
 			if (!this.ctx) return;
-			
-			// Draw trail
-			this.trail.forEach((point, index) => {
+
+			this.trail.forEach((point) => {
 				this.ctx!.beginPath();
 				this.ctx!.arc(point.x, point.y, 1, 0, Math.PI * 2);
 				this.ctx!.fillStyle = `rgba(255, 255, 255, ${point.alpha * 0.6})`;
 				this.ctx!.fill();
 			});
-			
-			// Draw shooting star
+
 			this.ctx.beginPath();
 			this.ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
 			this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
@@ -196,12 +192,23 @@
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
+		const stopWatching = initMotionWatcher();
+
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
+		const handleResize = () => {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			if (isReduced()) drawStaticFrame();
+		};
+		window.addEventListener('resize', handleResize);
+
 		const starCount = 200;
 		const cometCount = 5;
-		const objects: (Star | Comet | ShootingStar)[] = [];
+		const stars: Star[] = [];
+		const comets: Comet[] = [];
+		const shootingStars: ShootingStar[] = [];
 		let shootingStarTimer = 0;
 
 		for (let i = 0; i < starCount; i++) {
@@ -209,7 +216,7 @@
 			const y = Math.random() * canvas.height;
 			const radius = Math.random() * 1;
 			const speed = Math.random() * 0.1;
-			objects.push(new Star(canvas, x, y, radius, speed));
+			stars.push(new Star(canvas, x, y, radius, speed));
 		}
 
 		for (let i = 0; i < cometCount; i++) {
@@ -219,34 +226,94 @@
 			const speedX = Math.random() * 2 + 1;
 			const speedY = Math.random() * 0.5 + 0.5;
 			const tailLength = Math.random() * 50 + 30;
-			if (getChance(0.1)) objects.push(new Comet(canvas, x, y, radius, speedX, speedY, tailLength));
+			if (getChance(0.1)) comets.push(new Comet(canvas, x, y, radius, speedX, speedY, tailLength));
 		}
+
+		let rafId: number | undefined;
+		let lastReduced = isReduced();
+
+		const drawStaticFrame = () => {
+			if (!ctx) return;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			stars.forEach((star) => star.draw(true));
+		};
 
 		function animate() {
 			if (!ctx) return;
+
+			const reducedNow = isReduced();
+
+			if (reducedNow && !lastReduced) {
+				lastReduced = true;
+				drawStaticFrame();
+				rafId = undefined;
+				return;
+			}
+
+			lastReduced = reducedNow;
+
+			if (reducedNow) {
+				rafId = undefined;
+				return;
+			}
+
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			
-			// Spawn shooting stars occasionally
+
 			shootingStarTimer++;
-			if (shootingStarTimer > 300 && getChance(0.3)) { // Every ~5 seconds with 30% chance
-				objects.push(new ShootingStar(canvas));
+			if (shootingStarTimer > 300 && getChance(0.3)) {
+				shootingStars.push(new ShootingStar(canvas));
 				shootingStarTimer = 0;
 			}
-			
-			// Update and draw all objects
-			objects.forEach((obj, index) => {
-				obj.update();
-				obj.draw();
-			
-				if (obj instanceof ShootingStar && obj.isDead()) {
-					objects.splice(index, 1);
-				}
+
+			stars.forEach((star) => {
+				star.update();
+				star.draw();
 			});
-			
-			requestAnimationFrame(animate);
+
+			comets.forEach((comet) => {
+				comet.update();
+				comet.draw();
+			});
+
+			for (let i = shootingStars.length - 1; i >= 0; i--) {
+				const s = shootingStars[i];
+				s.update();
+				s.draw();
+				if (s.isDead()) shootingStars.splice(i, 1);
+			}
+
+			rafId = requestAnimationFrame(animate);
 		}
 
-		animate();
+		const kick = () => {
+			if (isReduced()) {
+				if (rafId !== undefined) {
+					cancelAnimationFrame(rafId);
+					rafId = undefined;
+				}
+				drawStaticFrame();
+			} else if (rafId === undefined) {
+				lastReduced = false;
+				rafId = requestAnimationFrame(animate);
+			}
+		};
+
+		kick();
+
+		const pollId = setInterval(() => {
+			const current = isReduced();
+			if (current !== lastReduced) {
+				lastReduced = current;
+				kick();
+			}
+		}, 1000);
+
+		return () => {
+			if (rafId !== undefined) cancelAnimationFrame(rafId);
+			clearInterval(pollId);
+			window.removeEventListener('resize', handleResize);
+			stopWatching();
+		};
 	});
 </script>
 

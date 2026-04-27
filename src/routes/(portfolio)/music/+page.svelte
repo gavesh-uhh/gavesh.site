@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { Loader2 } from 'lucide-svelte';
 	import type { PopularTrack, PopularTracksResponse } from '$lib/types/music';
+	import { scramble } from '$lib/actions/scramble';
+	import ListeningHeartbeat from '../comp/ListeningHeartbeat.svelte';
 
 	let popularTracks: PopularTrack[] = [];
 	let isLoading = true;
@@ -45,11 +47,13 @@
 
 <div class="flex-1 flex flex-col gap-6">
 	<div class="flex flex-col gap-1">
-		<h1 class="text-lg sm:text-2xl">Top 5 Tracks (Last 30 Days)</h1>
+		<h1 class="text-lg sm:text-2xl" use:scramble>Top 5 Tracks (Last 30 Days)</h1>
 		<p class="text-xs sm:text-sm text-muted-foreground">
 			Compact stats and ranking for your five most-played tracks.
 		</p>
 	</div>
+
+	<ListeningHeartbeat />
 
 	{#if isLoading}
 		<div class="flex justify-center items-center py-10">
@@ -74,14 +78,18 @@
 		</div>
 
 		<div class="flex flex-col gap-3">
-			<h2 class="text-sm text-muted-foreground">Ranking</h2>
+			<h2 class="text-sm text-muted-foreground" use:scramble={{ duration: 600 }}>Ranking</h2>
 			<div class="flex flex-col gap-2">
 				{#each topFiveTracks as track}
 					<div class="rounded-xl bg-white/5 p-3 border border-white/10">
 						<div class="flex items-center gap-3">
 							<div class="text-xs text-muted-foreground w-7">#{track.rank}</div>
 							{#if track.image}
-								<img src={track.image} alt={track.track} class="w-10 h-10 rounded-md object-cover" />
+								<img
+									src={track.image}
+									alt={track.track}
+									class="w-10 h-10 rounded-md object-cover"
+								/>
 							{:else}
 								<div class="w-10 h-10 rounded-md bg-white/10"></div>
 							{/if}

@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { scramble } from '$lib/actions/scramble';
+	import GitHubHeatmap from '../comp/GitHubHeatmap.svelte';
+	import RecentCommits from '../comp/RecentCommits.svelte';
+
 	type Project = {
 		name: string;
 		description: string;
@@ -79,37 +83,46 @@
 	];
 </script>
 
-<div class="flex-1 flex flex-col gap-3">
-	{#each projects as project}
-		<a
-			href={project.href}
-			target="_blank"
-			rel="noopener noreferrer"
-			class="rounded-2xl bg-white/5 px-4 py-4 transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
-		>
-			<div class="flex items-center justify-between gap-3">
-				<h1 class="text-lg sm:text-xl font-medium">{project.name}</h1>
-				<span class="rounded-full bg-green-600/90 px-2 py-0.5 text-[10px] font-medium tracking-wide"
-					>WIP</span
-				>
-			</div>
+<div class="flex-1 flex flex-col gap-5">
+	<h1 class="font-semibold text-muted-foreground" use:scramble>Projects</h1>
 
-			{#if project.note}
-				<p class="mt-1 text-xs italic text-muted-foreground">{project.note}</p>
-			{/if}
+	<GitHubHeatmap title="Code activity" />
 
-			<p class="mt-2 max-w-[560px] text-xs sm:text-sm text-muted-foreground">
-				{project.description}
-			</p>
+	<RecentCommits title="Recent commits" />
 
-			<div class="mt-3 flex items-center justify-between gap-3">
-				<div class="flex flex-wrap gap-1.5">
-					{#each project.techIcons as tech}
-						<img class="h-5 w-5" src={tech.src} alt={tech.alt} />
-					{/each}
+	<div class="flex flex-col gap-3">
+		{#each projects as project}
+			<a
+				href={project.href}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="rounded-2xl bg-white/5 px-4 py-4 transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+			>
+				<div class="flex items-center justify-between gap-3">
+					<h2 class="text-lg sm:text-xl font-medium">{project.name}</h2>
+					<span
+						class="rounded-full bg-green-600/90 px-2 py-0.5 text-[10px] font-medium tracking-wide"
+						>WIP</span
+					>
 				</div>
-				<span class="text-xs text-blue-400">{project.linkLabel} &rarr;</span>
-			</div>
-		</a>
-	{/each}
+
+				{#if project.note}
+					<p class="mt-1 text-xs italic text-muted-foreground">{project.note}</p>
+				{/if}
+
+				<p class="mt-2 max-w-[560px] text-xs sm:text-sm text-muted-foreground">
+					{project.description}
+				</p>
+
+				<div class="mt-3 flex items-center justify-between gap-3">
+					<div class="flex flex-wrap gap-1.5">
+						{#each project.techIcons as tech}
+							<img class="h-5 w-5" src={tech.src} alt={tech.alt} />
+						{/each}
+					</div>
+					<span class="text-xs text-blue-400">{project.linkLabel} &rarr;</span>
+				</div>
+			</a>
+		{/each}
+	</div>
 </div>

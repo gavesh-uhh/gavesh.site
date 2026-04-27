@@ -14,10 +14,14 @@
 	import Background from './comp/Background.svelte';
 	import Header from './comp/Header.svelte';
 	import Navigation from './comp/Navigation.svelte';
+	import CommandPalette from './comp/CommandPalette.svelte';
+	import { openPalette } from '$lib/state/palette.svelte';
 	import { fade } from 'svelte/transition';
 	let { children } = $props();
 	let pathname = $derived($page.url.pathname);
-	let routeSeo = $derived(ROUTE_SEO[pathname] ?? { title: SITE_TITLE_DEFAULT, description: SITE_DESCRIPTION_DEFAULT });
+	let routeSeo = $derived(
+		ROUTE_SEO[pathname] ?? { title: SITE_TITLE_DEFAULT, description: SITE_DESCRIPTION_DEFAULT }
+	);
 	let canonicalUrl = $derived(pathname === '/' ? SITE_URL : `${SITE_URL}${pathname}`);
 	let pageTitle = $derived(routeSeo.title);
 	let pageDescription = $derived(routeSeo.description);
@@ -50,7 +54,10 @@
 <svelte:head>
 	<title>{pageTitle}</title>
 	<meta name="description" content={pageDescription} />
-	<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+	<meta
+		name="robots"
+		content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+	/>
 	<link rel="canonical" href={canonicalUrl} />
 
 	<meta property="og:type" content="website" />
@@ -74,7 +81,29 @@
 	<div class="z-20 flex flex-col gap-6">
 		<Background />
 		<Header />
-		<Navigation />
+
+		<div class="flex flex-wrap items-center justify-between gap-3">
+			<Navigation />
+			<button
+				type="button"
+				onclick={openPalette}
+				aria-label="Open command palette"
+				class="group hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-muted-foreground transition-[background-color,color,border-color] duration-300 hover:bg-white/10 hover:text-white hover:border-white/20"
+			>
+				<span>Quick jump</span>
+				<span class="flex items-center gap-0.5">
+					<kbd
+						class="inline-flex items-center rounded border border-white/10 bg-white/[0.04] px-1 py-0.5 font-mono text-[10px]"
+						>⌘</kbd
+					>
+					<kbd
+						class="inline-flex items-center rounded border border-white/10 bg-white/[0.04] px-1 py-0.5 font-mono text-[10px]"
+						>K</kbd
+					>
+				</span>
+			</button>
+		</div>
+
 		<hr class="opacity-25" />
 		{#key pathname}
 			<div in:fade={{ duration: 450, delay: 0 }} out:fade={{ duration: 0, delay: 0 }}>
@@ -82,4 +111,6 @@
 			</div>
 		{/key}
 	</div>
+
+	<CommandPalette />
 </div>

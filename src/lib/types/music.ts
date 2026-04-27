@@ -9,4 +9,3 @@ export type PopularTrack = {
 export type PopularTracksResponse = {
 	tracks: PopularTrack[];
 };
-
