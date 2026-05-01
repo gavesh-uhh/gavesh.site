@@ -51,7 +51,7 @@
 					Github</a
 				>
 				<a
-					href="https://open.spotify.com/user/312nfepxvdheyb3m4kllzzzaqd34?si=a267995b18bb425a"
+					href="/spotify"
 					class="underline-offset-0 hover:underline flex flex-row gap-2 w-fit h-fit items-center"
 				>
 					<img

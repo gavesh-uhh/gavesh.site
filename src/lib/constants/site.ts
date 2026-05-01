@@ -1,5 +1,7 @@
 export const SITE_URL = 'https://gavesh.live';
 export const SITE_NAME = 'Gavesh Saparamadu';
+export const SPOTIFY_URL =
+	'https://open.spotify.com/user/312nfepxvdheyb3m4kllzzzaqd34?si=a267995b18bb425a';
 export const SITE_TITLE_DEFAULT = 'Gavesh Saparamadu | Portfolio';
 export const SITE_DESCRIPTION_DEFAULT =
 	'Portfolio of Gavesh Saparamadu, featuring projects, skills, links, and live listening stats.';
