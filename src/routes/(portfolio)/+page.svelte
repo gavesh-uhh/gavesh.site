@@ -51,6 +51,17 @@
 					Github</a
 				>
 				<a
+					href="https://open.spotify.com/user/312nfepxvdheyb3m4kllzzzaqd34?si=a267995b18bb425a"
+					class="underline-offset-0 hover:underline flex flex-row gap-2 w-fit h-fit items-center"
+				>
+					<img
+						src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/2024_Spotify_logo_without_text.svg/250px-2024_Spotify_logo_without_text.svg.png"
+						class="w-4 h-4"
+						alt="Spotify Logo"
+					/>
+					Spotify</a
+				>
+				<a
 					href="https://www.linkedin.com/in/gavesh-saparamadu/"
 					class="underline-offset-0 hover:underline flex flex-row gap-2 w-fit h-fit items-center"
 				>
