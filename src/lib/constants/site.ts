@@ -8,7 +8,8 @@ export const PROJECT_DOMAIN = 'gavesh.lol';
 
 export const PROJECT_HOSTS = {
 	nibm: `nibm.${PROJECT_DOMAIN}`,
-	seq: `seq.${PROJECT_DOMAIN}`
+	seq: `seq.${PROJECT_DOMAIN}`,
+	isrc: `isrc.${PROJECT_DOMAIN}`
 } as const;
 
 export type ProjectId = keyof typeof PROJECT_HOSTS;

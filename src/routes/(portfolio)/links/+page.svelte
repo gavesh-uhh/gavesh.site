@@ -37,5 +37,10 @@
 			description:
 				'Easier way of viewing lectures. Easily sort through and view where lectures are happening.'
 		})}
+		{@render link({
+			href: projectUrl('isrc'),
+			title: 'ISRC Finder',
+			description: 'Find the ISRC code for songs you come across on Instagram.'
+		})}
 	</div>
 </div>
