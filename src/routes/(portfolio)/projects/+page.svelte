@@ -15,23 +15,60 @@
 
 	const projects: Project[] = [
 		{
-			name: 'smallcode',
+			name: 'RoadScore',
 			description:
-				'A claude-code like harness specifically made for low parameter LLMS (eg: Qwen2.5:7B, Gemma4:e2b) for developement tasks',
-			href: 'https://github.com/gavesh-uhh/smallcode',
+				'Edge-to-cloud telematics for driver safety. ESP32 units stream inertial, GNSS, and acoustic telemetry, and a TypeScript engine arbitrates road defects against driver misconduct to produce transparent, auditable safety scores in real time.',
+			href: 'https://github.com/gavesh-uhh/roadscore-r1',
 			linkLabel: 'Visit Github',
 			techIcons: [
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/arduino/arduino-original.svg',
+					alt: 'Arduino'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
+					alt: 'C++'
+				},
 				{
 					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
 					alt: 'TypeScript'
 				},
 				{
-					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/denojs/denojs-original.svg',
-					alt: 'Deno.js'
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+					alt: 'Next.js'
 				},
 				{
-					src: 'https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/ollama.png',
-					alt: 'Ollama'
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+					alt: 'React'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg',
+					alt: 'Supabase'
+				}
+			]
+		},
+		{
+			name: 'Embeddy',
+			description:
+				'Embedded systems design assistant for Arduino, ESP32, and STM32. Describe a project and pick a board, and 9 parallel AI agents generate the schematic, wiring, starter firmware, and bill of materials in under 30 seconds.',
+			href: 'https://github.com/gavesh-uhh/embeddy',
+			linkLabel: 'Visit Github',
+			techIcons: [
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+					alt: 'Next.js'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+					alt: 'TypeScript'
+				},
+				{
+					src: 'https://www.pngall.com/wp-content/uploads/16/Google-Gemini-Logo-Transparent.png',
+					alt: 'Gemini'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg',
+					alt: 'Firebase'
 				}
 			]
 		},
@@ -78,6 +115,27 @@
 				{
 					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
 					alt: 'Node.js'
+				}
+			]
+		},
+		{
+			name: 'smallcode',
+			description:
+				'A claude-code like harness specifically made for low parameter LLMS (eg: Qwen2.5:7B, Gemma4:e2b) for developement tasks',
+			href: 'https://github.com/gavesh-uhh/smallcode',
+			linkLabel: 'Visit Github',
+			techIcons: [
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+					alt: 'TypeScript'
+				},
+				{
+					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/denojs/denojs-original.svg',
+					alt: 'Deno.js'
+				},
+				{
+					src: 'https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/ollama.png',
+					alt: 'Ollama'
 				}
 			]
 		}
