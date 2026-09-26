@@ -5,4 +5,4 @@ injectAnalytics({ mode: dev ? 'development' : 'production' });
 
 export const ssr = true;
 export const csr = true;
-export const prerender = false;
+export const prerender = true;

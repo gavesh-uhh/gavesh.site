@@ -18,11 +18,18 @@ export const GET = async () => {
 			image: lastTrack.image?.[2]?.['#text'] ?? ''
 		};
 
-		return jsonWithCors({
-			online: Boolean(lastTrack['@attr']),
-			recent: mostRecent,
-			tracks
-		});
+		return jsonWithCors(
+			{
+				online: Boolean(lastTrack['@attr']),
+				recent: mostRecent,
+				tracks
+			},
+			{
+				headers: {
+					'cache-control': 'public, max-age=30, s-maxage=60, stale-while-revalidate=300'
+				}
+			}
+		);
 	} catch (err) {
 		if (isHttpError(err)) {
 			throw err;
