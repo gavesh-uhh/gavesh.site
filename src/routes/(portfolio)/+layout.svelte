@@ -14,8 +14,6 @@
 	import Background from './comp/Background.svelte';
 	import Header from './comp/Header.svelte';
 	import Navigation from './comp/Navigation.svelte';
-	import CommandPalette from './comp/CommandPalette.svelte';
-	import { openPalette } from '$lib/state/palette.svelte';
 	import { fade } from 'svelte/transition';
 	let { children } = $props();
 	let pathname = $derived($page.url.pathname);
@@ -82,27 +80,7 @@
 		<Background />
 		<Header />
 
-		<div class="flex flex-wrap items-center justify-between gap-3">
-			<Navigation />
-			<button
-				type="button"
-				onclick={openPalette}
-				aria-label="Open command palette"
-				class="group hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-muted-foreground transition-[background-color,color,border-color] duration-300 hover:bg-white/10 hover:text-white hover:border-white/20"
-			>
-				<span>Quick jump</span>
-				<span class="flex items-center gap-0.5">
-					<kbd
-						class="inline-flex items-center rounded border border-white/10 bg-white/[0.04] px-1 py-0.5 font-mono text-[10px]"
-						>⌘</kbd
-					>
-					<kbd
-						class="inline-flex items-center rounded border border-white/10 bg-white/[0.04] px-1 py-0.5 font-mono text-[10px]"
-						>K</kbd
-					>
-				</span>
-			</button>
-		</div>
+		<Navigation />
 
 		<hr class="opacity-25" />
 		{#key pathname}
@@ -111,6 +89,4 @@
 			</div>
 		{/key}
 	</div>
-
-	<CommandPalette />
 </div>
