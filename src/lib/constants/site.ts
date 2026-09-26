@@ -2,6 +2,20 @@ export const SITE_URL = 'https://gavesh.live';
 export const SITE_NAME = 'Gavesh Saparamadu';
 export const SPOTIFY_URL =
 	'https://open.spotify.com/user/312nfepxvdheyb3m4kllzzzaqd34?si=a267995b18bb425a';
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/gaveshhh/';
+
+export const PROJECT_DOMAIN = 'gavesh.lol';
+
+export const PROJECT_HOSTS = {
+	nibm: `nibm.${PROJECT_DOMAIN}`,
+	seq: `seq.${PROJECT_DOMAIN}`
+} as const;
+
+export type ProjectId = keyof typeof PROJECT_HOSTS;
+
+export function projectUrl(id: ProjectId): string {
+	return `https://${PROJECT_HOSTS[id]}`;
+}
 export const SITE_TITLE_DEFAULT = 'Gavesh Saparamadu | Portfolio';
 export const SITE_DESCRIPTION_DEFAULT =
 	'Portfolio of Gavesh Saparamadu, featuring projects, skills, links, and live listening stats.';

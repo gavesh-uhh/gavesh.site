@@ -20,7 +20,7 @@
 	} from 'lucide-svelte';
 	import { palette, closePalette, openPalette, togglePalette } from '$lib/state/palette.svelte';
 	import { motion, isReduced, toggleMotion } from '$lib/state/motion.svelte';
-	import { SITE_URL } from '$lib/constants/site';
+	import { LINKEDIN_URL, SITE_URL } from '$lib/constants/site';
 
 	type Action = {
 		id: string;
@@ -122,11 +122,11 @@
 		{
 			id: 'ext-linkedin',
 			label: 'LinkedIn',
-			hint: 'linkedin.com/in/gavesh-saparamadu',
+			hint: 'linkedin.com/in/gaveshhh',
 			group: 'External',
 			icon: Linkedin,
 			keywords: 'resume professional',
-			run: () => openExternal('https://www.linkedin.com/in/gavesh-saparamadu/')
+			run: () => openExternal(LINKEDIN_URL)
 		},
 		{
 			id: 'ext-instagram',

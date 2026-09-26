@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { scramble } from '$lib/actions/scramble';
+	import { PROJECT_HOSTS, projectUrl } from '$lib/constants/site';
 	import GitHubHeatmap from '../comp/GitHubHeatmap.svelte';
 	import RecentCommits from '../comp/RecentCommits.svelte';
 
@@ -38,8 +39,8 @@
 			name: 'NIBM Toolkit',
 			description:
 				'Website built for NIBM students to sort lecture schedules, save favorites, and track ongoing classes.',
-			href: 'https://nibm.gavesh.me',
-			linkLabel: 'Visit nibm.gavesh.me',
+			href: projectUrl('nibm'),
+			linkLabel: `Visit ${PROJECT_HOSTS.nibm}`,
 			techIcons: [
 				{
 					src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg',
@@ -58,8 +59,8 @@
 		{
 			name: 'Sequence Diagram Generator',
 			description: 'Generate sequence diagrams from text descriptions using Gemini 3.5 Flash.',
-			href: 'https://seq.gavesh.me',
-			linkLabel: 'Visit seq.gavesh.me',
+			href: projectUrl('seq'),
+			linkLabel: `Visit ${PROJECT_HOSTS.seq}`,
 			note: '~ fork of zenuml-core',
 			techIcons: [
 				{

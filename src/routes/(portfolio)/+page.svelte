@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Coffee, SquareArrowOutUpRight } from 'lucide-svelte';
 	import { scramble } from '$lib/actions/scramble';
+	import { LINKEDIN_URL } from '$lib/constants/site';
 </script>
 
 <div class="flex-1 flex flex-col gap-7">
@@ -62,7 +63,7 @@
 					Spotify</a
 				>
 				<a
-					href="https://www.linkedin.com/in/gavesh-saparamadu/"
+					href={LINKEDIN_URL}
 					class="underline-offset-0 hover:underline flex flex-row gap-2 w-fit h-fit items-center"
 				>
 					<SquareArrowOutUpRight class="w-4 h-4" />
