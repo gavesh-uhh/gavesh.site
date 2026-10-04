@@ -1,6 +1,6 @@
 import { SITE_URL } from '$lib/constants/site';
 
-const ROUTES = ['/', '/projects', '/skills', '/music', '/links'] as const;
+const ROUTES = ['/'] as const;
 
 export const GET = async () => {
 	const now = new Date().toISOString();
